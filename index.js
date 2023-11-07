@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.db_USER}:${process.env.db_PASS}@cluster0.mypgnvz.mongodb.net/?retryWrites=true&w=majority`;
 
 console.log(process.env.db_USER);
@@ -31,26 +31,36 @@ async function run() {
 
     // popular services related api
     app.get('/popularServices', async (req, res) => {
-        const cursor = popularservicecollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
+      const cursor = popularservicecollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
 
+    })
+    // get data for view details
+    app.get('/popularServices/:id', async (req, res) => {
+      const id = req.params.id;
+      const options = {
+        projection: {}
+      };
+      const query = { _id: new ObjectId(id) };
+      const result = await popularservicecollection.findOne(query);
+      res.send(result);
     })
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-   // await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
 
 
 // GET method route
-app.get('/',(req,res)=>{
-    res.send('career is running');
+app.get('/', (req, res) => {
+  res.send('career is running');
 })
 app.listen(port, () => {
-    console.log(`Career Maker Server is running on port ${port}`);
+  console.log(`Career Maker Server is running on port ${port}`);
 })
