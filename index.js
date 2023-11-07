@@ -28,6 +28,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const popularservicecollection = client.db('Career_Maker').collection('popular_services');
+    const purchaseCollection = client.db('Career_Maker').collection('purchase_services');
 
     // popular services related api
     app.get('/popularServices', async (req, res) => {
@@ -46,6 +47,12 @@ async function run() {
       const result = await popularservicecollection.findOne(query);
       res.send(result);
     })
+    app.post('/mypurchase', async (req, res) => {
+      const newPurchase = req.body;
+      console.log(newPurchase);
+      const result = await purchaseCollection.insertOne(newPurchase);
+      res.send(result);
+  })
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
