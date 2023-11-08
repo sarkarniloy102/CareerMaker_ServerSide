@@ -57,26 +57,29 @@ async function run() {
       res.send(result);
     })
     app.get('/mypurchase', async (req, res) => {
-      console.log(req.query)
-      const email = req.query.email;
-      if (!email) {
-          return res.status(400).send('Email parameter is missing');
-      }
-  
+
+      const email = req.query?.email || "sarkarniloy102@gmail.com";
       const query = { email };
       console.log(query);
-  
+
       const cursor = purchaseCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
-  });
-  app.post('/addservice', async (req, res) => {
-    const newservice = req.body;
-    console.log(newservice);
-    const result = await addserviceCollection.insertOne(newservice);
-    res.send(result);
-  })
-  
+    });
+    // addservice api
+    app.post('/addservice', async (req, res) => {
+      const newservice = req.body;
+      console.log(newservice);
+      const result = await addserviceCollection.insertOne(newservice);
+      res.send(result);
+    })
+    app.get('/addservice', async (req, res) => {
+      const cursor = addserviceCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+
+    })
+
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
