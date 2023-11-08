@@ -58,7 +58,7 @@ async function run() {
     })
     app.get('/mypurchase', async (req, res) => {
 
-      const email = req.query?.email || "sarkarniloy102@gmail.com";
+      const email = req.query?.email ;
       const query = { email };
       console.log(query);
 
@@ -79,6 +79,13 @@ async function run() {
       res.send(result);
 
     })
+    // delete service
+    app.delete('/addservice/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await addserviceCollection.deleteOne(query);
+      res.send(result);
+  })
 
 
 
