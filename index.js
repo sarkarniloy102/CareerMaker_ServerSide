@@ -47,12 +47,28 @@ async function run() {
       const result = await popularservicecollection.findOne(query);
       res.send(result);
     })
+    // purchase booking
     app.post('/mypurchase', async (req, res) => {
       const newPurchase = req.body;
       console.log(newPurchase);
       const result = await purchaseCollection.insertOne(newPurchase);
       res.send(result);
-  })
+    })
+    app.get('/mypurchase', async (req, res) => {
+      const email = req.query.email;
+  
+      if (!email) {
+          return res.status(400).send('Email parameter is missing');
+      }
+  
+      const query = { email };
+      console.log(query);
+  
+      const cursor = purchaseCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+  });
+  
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
