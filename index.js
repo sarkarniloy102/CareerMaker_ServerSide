@@ -34,6 +34,17 @@ async function run() {
 
     // popular services related api
     app.get('/popularServices', async (req, res) => {
+      const query = {};
+      const sort = { length: -1 };
+      const limit = 4;
+      const cursor = popularservicecollection.find(query).sort(sort).limit(limit);
+      const result = await cursor.toArray();
+      res.send(result);
+
+    })
+    // for all services
+    app.get('/allservices', async (req, res) => {
+
       const cursor = popularservicecollection.find();
       const result = await cursor.toArray();
       res.send(result);
@@ -58,7 +69,7 @@ async function run() {
     })
     app.get('/mypurchase', async (req, res) => {
 
-      const email = req.query?.email ;
+      const email = req.query?.email;
       const query = { email };
       console.log(query);
 
@@ -85,8 +96,21 @@ async function run() {
       const query = { _id: new ObjectId(id) }
       const result = await addserviceCollection.deleteOne(query);
       res.send(result);
-  })
-
+    })
+    // Update service
+    app.patch('/addservice/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedBooking = req.body;
+      console.log(updatedBooking);
+      const updateDoc = {
+        $set: {
+          status: updatedBooking.status
+        },
+      };
+      const result = await addserviceCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
