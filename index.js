@@ -29,6 +29,8 @@ async function run() {
     await client.connect();
     const popularservicecollection = client.db('Career_Maker').collection('popular_services');
     const purchaseCollection = client.db('Career_Maker').collection('purchase_services');
+    const addserviceCollection = client.db('Career_Maker').collection('add_services');
+
 
     // popular services related api
     app.get('/popularServices', async (req, res) => {
@@ -55,8 +57,8 @@ async function run() {
       res.send(result);
     })
     app.get('/mypurchase', async (req, res) => {
+      console.log(req.query)
       const email = req.query.email;
-  
       if (!email) {
           return res.status(400).send('Email parameter is missing');
       }
@@ -68,6 +70,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
   });
+  app.post('/addservice', async (req, res) => {
+    const newservice = req.body;
+    console.log(newservice);
+    const result = await addserviceCollection.insertOne(newservice);
+    res.send(result);
+  })
   
 
 
